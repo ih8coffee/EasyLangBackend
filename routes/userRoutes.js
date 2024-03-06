@@ -1,16 +1,44 @@
-// /routes/userRoutes.js
 const express = require("express");
 const router = express.Router();
 const UserController = require("../controllers/UserController");
+const auth = require("../middleware/auth");
+const rbac = require("../middleware/rbac");
 
-router.post("/users", UserController.createUser);
+// Creating a new user requires authentication
+router.post("/users", auth, rbac(["pm"]), UserController.createUser);
 
-router.get("/users", UserController.getAllUsers);
+// Listing all users: Restricted to PMs or editors
+// PMs can see all users, editors can see users within their projects
+router.get(
+  "/users",
+  auth,
+  async (req, res, next) => {
+    if (["pm", "editor"].includes(req.user.role)) {
+      if (req.user.role === "pm") {
+        return next();
+      } else if (req.user.role === "editor") {
+        req.isEditor = true;
+        return next();
+      }
+    } else {
+      return res.status(403).send({ error: "Access denied." });
+    }
+  },
+  UserController.getAllUsers
+);
 
-router.get("/users/:id", UserController.getUserById);
+// Fetching a user by ID: Requires authentication
+router.get("/users/:id", auth, UserController.getUserById);
 
-router.patch("/users/:id/role", UserController.updateUserRole);
+// Updating a user role: Requires being a PM
+router.patch(
+  "/users/:id/role",
+  auth,
+  rbac(["pm"]),
+  UserController.updateUserRole
+);
 
-router.delete("/users/:id", UserController.deleteUser);
+// Deleting a user: Requires being a PM
+router.delete("/users/:id", auth, rbac(["pm"]), UserController.deleteUser);
 
 module.exports = router;
