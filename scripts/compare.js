@@ -15,6 +15,6 @@ bcrypt.hash(password, 8, (err, hashedPassword) => {
       console.error("Failed to compare the password:", err);
       return;
     }
-    console.log("Password compared successfully:", result); // true
+    console.log("Password compared successfully:", result);
   });
 });
