@@ -2,24 +2,20 @@
 
 require("dotenv").config();
 const mongoose = require("mongoose");
-const User = require("../models/User"); // Update this path to where your User model is located
-const bcrypt = require("bcryptjs");
+const User = require("../models/User");
 
 const createPMUser = async () => {
   try {
-    await mongoose.connect(process.env.MONGODB_URI, {
+    await mongoose.connect("mongodb://localhost:27017/easylang", {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
-
-    // Hash the password
-    const passwordHash = await bcrypt.hash("password123", 8);
 
     // Create the PM user
     const pmUser = new User({
       username: "pmUser",
       email: "pm@example.com",
-      password: passwordHash,
+      password: "Password123",
       role: "projectManager",
     });
 
