@@ -13,8 +13,8 @@ router.get(
   "/users",
   auth,
   async (req, res, next) => {
-    if (["pm", "editor"].includes(req.user.role)) {
-      if (req.user.role === "pm") {
+    if (["pm", "editor", "admin"].includes(req.user.role)) {
+      if (req.user.role === "pm" || req.user.role === "admin") {
         return next();
       } else if (req.user.role === "editor") {
         req.isEditor = true;
@@ -26,6 +26,9 @@ router.get(
   },
   UserController.getAllUsers
 );
+
+// Fetch a user's own profile: Requires authentication
+router.get("/users/me", auth, UserController.getOwnProfile);
 
 // Fetching a user by ID: Requires authentication
 router.get("/users/:id", auth, UserController.getUserById);

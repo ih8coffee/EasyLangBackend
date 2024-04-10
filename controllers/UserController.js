@@ -36,6 +36,14 @@ exports.getUserById = async (req, res) => {
   }
 };
 
+exports.getOwnProfile = async (req, res) => {
+  try {
+    res.status(200).json(req.user);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
 exports.updateUserRole = async (req, res) => {
   try {
     const { role } = req.body;

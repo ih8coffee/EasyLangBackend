@@ -4,29 +4,31 @@ require("dotenv").config();
 const mongoose = require("mongoose");
 const User = require("../models/User");
 
-const createPMUser = async () => {
+const createAdmin = async () => {
   try {
     await mongoose.connect("mongodb://localhost:27017/easylang", {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
 
-    // Create the PM user
-    const pmUser = new User({
-      username: "pmUser",
-      email: "pm@example.com",
+    // Create the Admin user
+    const Admin = new User({
+      username: "Admin",
+      name: "Admin",
+      surname: "Admin",
+      email: "admin@example.com",
       password: "Password123",
-      role: "projectManager",
+      role: "admin",
     });
 
     //update the user
-    await pmUser.save();
-    console.log("PM user created successfully!");
+    await Admin.save();
+    console.log("Admin user created successfully!");
   } catch (error) {
-    console.error("Failed to create PM user:", error);
+    console.error("Failed to create Admin user:", error);
   } finally {
     mongoose.connection.close();
   }
 };
 
-createPMUser();
+createAdmin();
