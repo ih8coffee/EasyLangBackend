@@ -9,11 +9,12 @@ const UserSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   productivity: { type: Number, default: 0 },
-  projectId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Project",
-    required: false,
-  },
+  projectList: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Project",
+    },
+  ],
   role: {
     type: String,
     required: true,

@@ -10,7 +10,11 @@ const TaskSchema = new mongoose.Schema({
     required: true,
   },
   date: { type: Date, default: Date.now },
+  finishDate: { type: Date },
   progress: { type: Number, required: true, min: 0, max: 100 },
+  body: { type: String, required: true },
   description: { type: String, required: true },
   state: { type: Boolean, default: true },
 });
+
+module.exports = mongoose.model("Task", TaskSchema);

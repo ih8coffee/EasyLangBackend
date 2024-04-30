@@ -1,11 +1,25 @@
-// routes/taskRoutes.js
-
 const express = require("express");
 const router = express.Router();
+const TaskController = require("../controllers/TaskController");
+const auth = require("../middleware/auth");
+const rbac = require("../middleware/rbac");
 
-const Task = require("../controllers/TaskController");
+// Creating a new task requires PM level authorization
+router.post("/tasks/", auth, rbac(["pm"]), TaskController.createTask);
 
-router.post("/task", Task.createTask);
-router.get("/task/:id", Task.getTask);
+// Listing all own tasks: Restricted to authenticated users
+router.get("/tasks/", auth, TaskController.getOwnTasks);
+
+// Listing tasks from a project: Restricted to authenticated users
+router.get("/projects/:projectId", auth, TaskController.getProjectTasks);
+
+// Fetching a single task by ID: Restricted to authenticated users
+router.get("/tasks/:taskId", auth, TaskController.getTaskById);
+
+// Updating a task: Requires being a PM
+router.put("/tasks/:taskId", auth, rbac(["pm"]), TaskController.updateTask);
+
+// Deleting a task: Requires being a PM
+router.delete("/tasks/:taskId", auth, rbac(["pm"]), TaskController.deleteTask);
 
 module.exports = router;
