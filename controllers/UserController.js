@@ -44,6 +44,20 @@ exports.getOwnProfile = async (req, res) => {
   }
 };
 
+exports.updateOwnProfile = async (req, res) => {
+  try {
+    const { phone, email } = req.body;
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      { phone, email },
+      { new: true }
+    );
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
 exports.updateUserRole = async (req, res) => {
   try {
     const { role } = req.body;

@@ -15,7 +15,7 @@ exports.createProject = async (req, res) => {
 
 exports.getProjectById = async (req, res) => {
   try {
-    const project = await Project.findById(req.params.id);
+    const project = await Project.findById(req.params.projectId);
     if (!project) {
       return res.status(404).json({ message: "Project not found" });
     }
@@ -31,6 +31,15 @@ exports.getOwnProjects = async (req, res) => {
       ObjectId: req.user.projectList[0].toHexString,
     });
     res.status(200).json(projects);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+exports.getProjectTasks = async (req, res) => {
+  try {
+    const tasks = await Task.find({ projectId: req.params.id });
+    res.status(200).json(tasks);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }

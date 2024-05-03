@@ -9,12 +9,19 @@ const TaskSchema = new mongoose.Schema({
     ref: "Project",
     required: true,
   },
+  userAssigned: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
   date: { type: Date, default: Date.now },
   finishDate: { type: Date },
   progress: { type: Number, required: true, min: 0, max: 100 },
-  body: { type: String, required: true },
+  bodyInitial: { type: String, required: true },
+  bodyFinal: { type: String },
   description: { type: String, required: true },
   state: { type: Boolean, default: true },
+  inReview: { type: Boolean, default: false },
 });
 
 module.exports = mongoose.model("Task", TaskSchema);

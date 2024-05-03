@@ -5,7 +5,12 @@ const auth = require("../middleware/auth");
 const rbac = require("../middleware/rbac");
 
 // Creating a new user requires authentication
-router.post("/users", auth, rbac(["pm"]), UserController.createUser);
+router.post(
+  "/users",
+  auth,
+  rbac(["projectManager"]),
+  UserController.createUser
+);
 
 // Listing all users: Restricted to PMs or editors
 // PMs can see all users, editors can see users within their projects
@@ -13,10 +18,10 @@ router.get(
   "/users",
   auth,
   async (req, res, next) => {
-    if (["pm", "editor", "admin"].includes(req.user.role)) {
-      if (req.user.role === "pm" || req.user.role === "admin") {
+    if (["projectManager", "manager", "admin"].includes(req.user.role)) {
+      if (req.user.role === "projectManager" || req.user.role === "admin") {
         return next();
-      } else if (req.user.role === "editor") {
+      } else if (req.user.role === "manager") {
         req.isEditor = true;
         return next();
       }
@@ -30,6 +35,8 @@ router.get(
 // Fetch a user's own profile: Requires authentication
 router.get("/users/me", auth, UserController.getOwnProfile);
 
+router.put("/users/me", auth, UserController.updateOwnProfile);
+
 // Fetching a user by ID: Requires authentication
 router.get("/users/:id", auth, UserController.getUserById);
 
@@ -37,11 +44,16 @@ router.get("/users/:id", auth, UserController.getUserById);
 router.patch(
   "/users/:id/role",
   auth,
-  rbac(["pm"]),
+  rbac(["projectManager"]),
   UserController.updateUserRole
 );
 
 // Deleting a user: Requires being a PM
-router.delete("/users/:id", auth, rbac(["pm"]), UserController.deleteUser);
+router.delete(
+  "/users/:id",
+  auth,
+  rbac(["projectManager"]),
+  UserController.deleteUser
+);
 
 module.exports = router;

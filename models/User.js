@@ -6,6 +6,7 @@ const UserSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
   name: { type: String, required: true },
   surname: { type: String, required: true },
+  phone: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   productivity: { type: Number, default: 0 },
@@ -18,7 +19,7 @@ const UserSchema = new mongoose.Schema({
   role: {
     type: String,
     required: true,
-    enum: ["worker", "manager", "projectManager", "admin"],
+    enum: ["worker", "manager", "projectManager"],
   },
   taskList: [
     {
